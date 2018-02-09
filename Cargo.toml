@@ -1,0 +1,6 @@
+[package]
+name = "rsc"
+version = "0.1.0"
+authors = ["Benjamin Kulas <nazekthetweaker@gmail.com>"]
+
+[dependencies]
