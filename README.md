@@ -10,7 +10,7 @@ As a desk calculator:
 
 As a pipe component:
 
-    $ ...stuff... | rsc -c '$0 $2 * $1 + .' | ...other stuff...
+    $ ...stuff... | rsc '$0 $2 * $1 + .' | ...other stuff...
     
 ## Language Reference
 
