@@ -1,6 +1,10 @@
 [package]
 name = "rsc"
 version = "0.1.0"
+description = "A dc-like command-line RPN calculator"
+license = "MIT"
+repository = "https://github.com/nazek42/rsc"
 authors = ["Benjamin Kulas <nazekthetweaker@gmail.com>"]
 
 [dependencies]
+reflex = "0.1"
