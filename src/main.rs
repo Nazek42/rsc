@@ -10,8 +10,15 @@ use std::collections::VecDeque;
 
 fn main() {
     let ruleset = init_ruleset();
-    let program = env::args().nth(1).unwrap();
-    interpret(reflex::lex(&ruleset, program));
+    let mut program = env::args().nth(1).unwrap();
+    let use_stdin_p;
+    if program == "-c" {
+        program = env::args().nth(2).unwrap();
+        use_stdin_p = false;
+    } else {
+        use_stdin_p = true;
+    }
+    interpret(reflex::lex(&ruleset, program), use_stdin_p);
 }
 
 fn init_ruleset() -> reflex::Ruleset<Token> {
@@ -39,7 +46,7 @@ macro_rules! error {
     } }
 }
 
-fn interpret(tokens_i: reflex::Lexer<Token>) {
+fn interpret(tokens_i: reflex::Lexer<Token>, use_stdin_p: bool) {
     let mut tokens: VecDeque<Token> = tokens_i.map(|res| res.unwrap()).collect();
     let mut variables: HashMap<String, f64> = HashMap::new();
     variables.insert("E".to_string(), std::f64::consts::E);
@@ -47,14 +54,19 @@ fn interpret(tokens_i: reflex::Lexer<Token>) {
     let mut functions: HashMap<String, Box<Fn(&mut Vec<f64>)>> = HashMap::new();
     define_builtins(&mut functions);
     let mut stack: Vec<f64> = Vec::new();
-    let args: Vec<String> = read_stdin().split_whitespace().map(|s| s.to_string()).collect();
+    let args: Vec<String>;
+    if use_stdin_p {
+        args = read_stdin().split_whitespace().map(|s| s.to_string()).collect();
+    } else {
+        args = Vec::new();
+    }
     while !tokens.is_empty() {
         let token: Token = tokens.pop_front().unwrap();
         match token {
             Token::ValueOf => {
                 //println!("Processing ValueOf");
                 stack.push(match tokens.pop_front().unwrap() {
-                    Token::Number(n)         => args[(n as usize)+1].parse().unwrap(),
+                    Token::Number(n)         => args[(n as usize)].parse().unwrap(),
                     Token::Identifier(ref s) => *variables.get(s).unwrap(),
                     _                        => error!("Syntax error: $ not followed by number or identifier")
                 });
