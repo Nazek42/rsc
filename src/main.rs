@@ -23,7 +23,7 @@ fn main() {
 
 fn init_ruleset() -> reflex::Ruleset<Token> {
     let mut ruleset = reflex::Ruleset::<Token>::new();
-    ruleset.add_rule(r"-[0-9]*\.?[0-9]+", lex_rule!(|tok| Token::Number(-tok.parse::<f64>().unwrap())));
+    ruleset.add_rule(r"-[0-9]*\.?[0-9]+", lex_rule!(|tok| Token::Number(tok.parse::<f64>().unwrap())));
     ruleset.add_rule(r"[0-9]*\.?[0-9]+", lex_rule!(|tok| Token::Number(tok.parse().unwrap())));
     ruleset.add_rule(r"[^0-9$:\s]+", lex_rule!(|tok| Token::Identifier(tok.to_string())));
     ruleset.add_simple(r"\$", Token::ValueOf);
